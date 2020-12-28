@@ -1,6 +1,5 @@
 package uz.zhama.jwtsecurity.entity;
 
-import jdk.jfr.DataAmount;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,10 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @NoArgsConstructor
@@ -26,23 +22,40 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotBlank
-    @Size(min=3, max = 50)
+
+    @Size(min = 3, max = 50)
     private String name;
 
-    @NotBlank
-    @Size(min=3, max = 50)
+
+    @Size(min = 3, max = 50)
     private String username;
 
-    @NotBlank
-    @Size(min=6, max = 100)
+
+    @Size(min = 6, max = 100)
     private String password;
+
+    private String address;
+//    @OneToMany(
+//            mappedBy = "user",
+//            cascade = CascadeType.ALL,
+//            orphanRemoval = true
+//    )
+//    private List<Cart> carts;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles;
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Cart> carts;
+
+//    @OneToOne(cascade = CascadeType.ALL)
+//    private Cart cart;
 
     public User(String name, String username, String password) {
         this.name = name;

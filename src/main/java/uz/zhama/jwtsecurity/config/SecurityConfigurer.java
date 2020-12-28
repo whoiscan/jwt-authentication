@@ -1,4 +1,4 @@
-package uz.zhama.jwtsecurity.security;
+package uz.zhama.jwtsecurity.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -7,15 +7,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import uz.zhama.jwtsecurity.service.MyUserDetailsService;
 import uz.zhama.jwtsecurity.util.JwtAuthEntryPoint;
 import uz.zhama.jwtsecurity.util.JwtAuthTokenFilter;
@@ -41,11 +39,11 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/admin/**").permitAll()
                 .antMatchers("/auth/**").permitAll()
+                .antMatchers("/api/**").permitAll().anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-
     }
 
     @Bean
@@ -58,6 +56,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
     @Bean
     public PasswordEncoder passwordEncoder() {

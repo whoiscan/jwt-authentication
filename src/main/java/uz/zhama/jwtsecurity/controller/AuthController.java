@@ -9,7 +9,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import uz.zhama.jwtsecurity.entity.Role;
 import uz.zhama.jwtsecurity.entity.RoleName;
 import uz.zhama.jwtsecurity.entity.User;
@@ -21,12 +20,7 @@ import uz.zhama.jwtsecurity.repository.UserRepository;
 import uz.zhama.jwtsecurity.util.JwtUtil;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Digits;
-import java.net.URI;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -39,13 +33,14 @@ public class AuthController {
     private JwtUtil jwtProvider;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     @Autowired
-    PasswordEncoder encoder;
+    private PasswordEncoder encoder;
+
 
     //for getting tokens of registered users
     @PostMapping("/signin")
@@ -78,8 +73,9 @@ public class AuthController {
         //setting register user role USER only not admin!!!
         Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
                 .orElseThrow(() -> new RuntimeException("User Role not set."));
-
         user.setRoles(Collections.singletonList(userRole));
+
+
         userRepository.save(user);
         return ResponseEntity.ok().body("User signed up successfully");
         /*

@@ -3,6 +3,7 @@ package uz.zhama.jwtsecurity.util;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import uz.zhama.jwtsecurity.entity.User;
@@ -11,8 +12,11 @@ import java.util.Date;
 
 @Component
 public class JwtUtil {
+    @Value("app.jwtSecret")
+    private String mySecretKey;
 
-    private String mySecretKey= "secret";
+    @Value("${app.jwtExpirationInMs}")
+    private Long expDate;
 
     private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
 

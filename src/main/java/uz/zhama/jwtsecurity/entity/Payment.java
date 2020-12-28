@@ -3,25 +3,23 @@ package uz.zhama.jwtsecurity.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="role")
-public class Role implements GrantedAuthority{
+@Table(name = "payment")
+public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(length = 60)
-    private RoleName name;
-
-    @Override
-    public String getAuthority() {
-        return this.name.name();
-    }
+    private Timestamp time;
+    private Integer amount;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "invoice_id")
+    private Invoice invoice;
 }
