@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface Cart_itemsRepository extends JpaRepository<Cart_items, Integer> {
     List<Cart_items> getAllProductByCartId(Integer cart_id);
     Optional<Cart_items> findByCartIdAndProductId(Integer cart_id, Integer product_id);
-    Optional<Cart_items> getOneByCartIdAndProductId(Integer cart_id, Integer product_id);
-    Boolean existsProductByCartId(Integer cart_id);
+    Cart_items getByCartIdAndProductId(Integer cart_id, Integer product_id);
+    Optional<Cart_items> findOneByCartIdAndProductId(Integer cart_id, Integer product_id);
+    Boolean existsByCartIdAndProductId(Integer cartId, Integer productId);
 }

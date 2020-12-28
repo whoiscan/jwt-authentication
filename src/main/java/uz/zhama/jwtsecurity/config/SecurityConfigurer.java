@@ -56,7 +56,6 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
     @Bean
     public PasswordEncoder passwordEncoder() {

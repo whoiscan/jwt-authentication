@@ -8,6 +8,7 @@ import uz.zhama.jwtsecurity.models.CartReq;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Integer> {
@@ -15,7 +16,9 @@ public interface CartRepository extends JpaRepository<Cart, Integer> {
     @Transactional
     @Override
     <S extends Cart> S save(S s);
-    Cart findIdByUserId(Integer userId);
+    Optional<Cart> findIdByUserId(Integer userId);
+    Cart getIdByUserId(Integer userId);
+    Cart getCartIdByUserId(Integer userId);
 
     Boolean existsCartByUserId(Integer userId);
 }
