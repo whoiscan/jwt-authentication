@@ -21,16 +21,16 @@ public class Invoice {
     private Double amount;
     private Date issueDate;
     private Date expDate;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cart_id", referencedColumnName = "id")
-    private Cart cart;
-
+    private Boolean status;
     @OneToMany(
             mappedBy = "invoice",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
     private List<Payment> payments;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
 
 }

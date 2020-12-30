@@ -10,7 +10,6 @@ import uz.zhama.jwtsecurity.entity.User;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartReq {
-    private User user;
     private Product product;
     private Integer quantity;
 }

@@ -1,8 +1,6 @@
 package uz.zhama.jwtsecurity.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -12,7 +10,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -53,6 +52,12 @@ public class User implements UserDetails {
             orphanRemoval = true
     )
     private List<Cart> carts;
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Payment> payments;
 
 //    @OneToOne(cascade = CascadeType.ALL)
 //    private Cart cart;

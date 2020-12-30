@@ -2,6 +2,8 @@ package uz.zhama.jwtsecurity.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -13,9 +15,9 @@ public class MyUserDetailsService  implements UserDetailsService {
     @Autowired
     UserRepository userRepository;
 
+
     @Override
     public User loadUserByUsername(String userName) throws UsernameNotFoundException {
-        return userRepository.findByUsername(userName)
-                .orElseThrow(() -> new UsernameNotFoundException(userName));
+        return userRepository.findByUsername(userName);
         }
 }

@@ -43,7 +43,7 @@ public class AuthController {
 
 
     //for getting tokens of registered users
-    @PostMapping("/signin")
+    @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(

@@ -29,7 +29,12 @@ public class Cart {
             orphanRemoval = true
     )
     private List<Cart_items> cart_items;
-
+    @OneToMany(
+            mappedBy = "cart",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Invoice> invoices;
 //    @ManyToOne
 //    @JoinColumn(name = "product_id")
 //    private Product product;

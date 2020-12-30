@@ -26,13 +26,15 @@ public class CartServiceImpl implements CartService {
     UserRepository userRepository;
     @Autowired
     Cart_itemsRepository cart_itemsRepository;
-
+    @Autowired
+    SecurityUtil securityUtil;
 
     @Override
     public ResponseEntity<Result> addProductToCart(CartReq cartReq) {
         Result result = new Result();
-        if (cartRepository.existsCartByUserId(cartReq.getUser().getId())) {
-            Cart cartId = cartRepository.getCartIdByUserId(cartReq.getUser().getId());
+
+        if (cartRepository.existsCartByUserId(securityUtil.getCurrentUser().getId())) {
+            Cart cartId = cartRepository.getCartIdByUserId(securityUtil.getCurrentUser().getId());
             if (cartId != null && cart_itemsRepository.existsByCartIdAndProductId(cartId.getId(), cartReq.getProduct().getId())) {
                 Cart_items cart_items = cart_itemsRepository.getByCartIdAndProductId(cartId.getId(), cartReq.getProduct().getId());
                 cart_items.setQuantity(cart_items.getQuantity() + cartReq.getQuantity());
@@ -42,7 +44,7 @@ public class CartServiceImpl implements CartService {
                 Cart_items cart_items = new Cart_items();
                 cart_items.setCreatedDate(Date.from(Instant.now()));
                 cart_items.setQuantity(cartReq.getQuantity());
-                Cart cart = cartRepository.getIdByUserId(cartReq.getUser().getId());
+                Cart cart = cartRepository.getIdByUserId(securityUtil.getCurrentUser().getId());
                 if(cart!=null)
                 cart_items.setCart(cart);
                 else {
@@ -53,8 +55,8 @@ public class CartServiceImpl implements CartService {
             }
         } else {
             Cart cart = new Cart();
-            if (cartReq.getUser() != null && cartReq.getProduct() != null) {
-                cart.setUser(cartReq.getUser());
+            if (securityUtil.getCurrentUser().toString() != null && cartReq.getProduct() != null) {
+                cart.setUser(securityUtil.getCurrentUser());
                 cart.setStatus(true);
                 cart.setCreatedDate(Date.from(Instant.now()));
                 cartRepository.save(cart);
@@ -73,7 +75,7 @@ public class CartServiceImpl implements CartService {
     }
 
     private ResponseEntity<Result> getResultResponseEntity(CartReq cartReq, Result result, Cart_items cart_items) {
-        if (cartReq.getUser() != null && cartReq.getProduct() != null) {
+        if (securityUtil.getCurrentUser().toString() != null && cartReq.getProduct() != null) {
             if (productRepository.findById(cartReq.getProduct().getId()).isPresent())
                 cart_items.setProduct(cartReq.getProduct());
             else {
@@ -127,7 +129,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public ResponseEntity<Result> removeProductFromCart(CartDelReq cartDelReq) {
         Result result = new Result();
-        Optional<Cart> cart = cartRepository.findIdByUserId(cartDelReq.getUserId());
+        Optional<Cart> cart = cartRepository.findIdByUserId(securityUtil.getCurrentUser().getId());
         Optional<Cart_items> optional = cart_itemsRepository.findByCartIdAndProductId(cart.get().getId(), cartDelReq.getProductId());
         if (cart.isPresent() && cart != null) {
             if (optional.isPresent()) {
