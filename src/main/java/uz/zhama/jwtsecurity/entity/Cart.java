@@ -1,14 +1,13 @@
 package uz.zhama.jwtsecurity.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -24,12 +23,14 @@ public class Cart {
     private User user;
 
     @OneToMany(
+            fetch = FetchType.LAZY,
             mappedBy = "cart",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
     private List<Cart_items> cart_items;
     @OneToMany(
+            fetch = FetchType.LAZY,
             mappedBy = "cart",
             cascade = CascadeType.ALL,
             orphanRemoval = true

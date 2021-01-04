@@ -21,10 +21,11 @@ public class Product {
     @Lob
     private byte[] image;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
     @OneToMany(
+            fetch = FetchType.LAZY,
             mappedBy = "invoice",
             cascade = CascadeType.ALL,
             orphanRemoval = true
@@ -32,6 +33,7 @@ public class Product {
     private List<Payment> payments;
 
     @OneToMany(
+            fetch = FetchType.LAZY,
             mappedBy = "product",
             cascade = CascadeType.ALL,
             orphanRemoval = true

@@ -17,8 +17,8 @@ public interface CartRepository extends JpaRepository<Cart, Integer> {
     @Override
     <S extends Cart> S save(S s);
     Optional<Cart> findIdByUserId(Integer userId);
+    Optional<Cart> findByUserId(Integer userId);
     Cart getIdByUserId(Integer userId);
     Cart getCartIdByUserId(Integer userId);
-
     Boolean existsCartByUserId(Integer userId);
 }

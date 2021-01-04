@@ -1,5 +1,6 @@
 package uz.zhama.jwtsecurity.controller;
 
+import groovy.util.logging.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ import uz.zhama.jwtsecurity.util.JwtUtil;
 
 import javax.validation.Valid;
 import java.util.*;
-
+@Slf4j
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/auth")

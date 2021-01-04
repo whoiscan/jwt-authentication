@@ -17,6 +17,7 @@ public class Cart_items {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private Date createdDate;
+    private Date updatedDate;
 
 //    @ManyToOne
 //    @JoinColumn(name = "user_id")
@@ -24,10 +25,10 @@ public class Cart_items {
 
     private Integer quantity;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id")
     private Cart cart;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 }

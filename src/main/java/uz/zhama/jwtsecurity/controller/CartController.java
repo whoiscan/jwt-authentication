@@ -2,6 +2,7 @@ package uz.zhama.jwtsecurity.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ public class CartController {
     UserRepository userRepository;
 
     @PostMapping("/add")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Result> addProductToCart(@RequestBody CartReq cartReq) {
         return cartService.addProductToCart(cartReq);
     }

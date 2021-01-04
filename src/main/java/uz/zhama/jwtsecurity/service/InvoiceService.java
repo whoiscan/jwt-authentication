@@ -5,4 +5,5 @@ import uz.zhama.jwtsecurity.models.JsonSend;
 
 
 public interface InvoiceService {
+    JsonSend createInvoice();
 }

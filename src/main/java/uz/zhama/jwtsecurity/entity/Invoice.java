@@ -23,6 +23,7 @@ public class Invoice {
     private Date expDate;
     private Boolean status;
     @OneToMany(
+            fetch = FetchType.LAZY,
             mappedBy = "invoice",
             cascade = CascadeType.ALL,
             orphanRemoval = true
