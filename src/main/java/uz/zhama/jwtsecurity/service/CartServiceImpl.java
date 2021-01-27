@@ -5,29 +5,31 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.zhama.jwtsecurity.entity.Cart;
 import uz.zhama.jwtsecurity.entity.Cart_items;
-import uz.zhama.jwtsecurity.entity.Product;
 import uz.zhama.jwtsecurity.models.*;
 import uz.zhama.jwtsecurity.repository.CartRepository;
 import uz.zhama.jwtsecurity.repository.Cart_itemsRepository;
 import uz.zhama.jwtsecurity.repository.ProductRepository;
 import uz.zhama.jwtsecurity.repository.UserRepository;
 
-
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CartServiceImpl implements CartService {
-    @Autowired
-    CartRepository cartRepository;
-    @Autowired
-    ProductRepository productRepository;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    Cart_itemsRepository cart_itemsRepository;
-    @Autowired
-    SecurityUtil securityUtil;
+    private final CartRepository cartRepository;
+    private final ProductRepository productRepository;
+    private final Cart_itemsRepository cart_itemsRepository;
+    private final SecurityUtil securityUtil;
+
+    public CartServiceImpl(CartRepository cartRepository, ProductRepository productRepository, Cart_itemsRepository cart_itemsRepository, SecurityUtil securityUtil) {
+        this.cartRepository = cartRepository;
+        this.productRepository = productRepository;
+        this.cart_itemsRepository = cart_itemsRepository;
+        this.securityUtil = securityUtil;
+    }
 
     @Override
     public ResponseEntity<Result> addProductToCart(CartReq cartReq) {
@@ -76,6 +78,7 @@ public class CartServiceImpl implements CartService {
 
     private ResponseEntity<Result> getResultResponseEntity(CartReq cartReq, Result result, Cart_items cart_items) {
         if (securityUtil.getCurrentUser().toString() != null && cartReq.getProductId() != null) {
+
             if (productRepository.findById(cartReq.getProductId()).isPresent()) {
                 cart_items.setProduct(productRepository.getOne(cartReq.getProductId()));
                 cart_items.setUpdatedDate(Date.from(Instant.now()));
@@ -84,17 +87,10 @@ public class CartServiceImpl implements CartService {
                 result.setMessage("Product not found");
                 return ResponseEntity.status(400).body(result);
             }
-
-            Cart_items savedCart = cart_itemsRepository.save(cart_items);
-            if (savedCart != null) {
-                result.setSuccess(true);
-                result.setMessage(productRepository.getOne(cartReq.getProductId()).getName() + " is successfully added");
-                return ResponseEntity.ok(result);
-            } else {
-                result.setSuccess(false);
-                result.setMessage("Not Saved");
-                return ResponseEntity.status(400).body(result);
-            }
+            cart_itemsRepository.save(cart_items);
+            result.setSuccess(true);
+            result.setMessage(productRepository.getOne(cartReq.getProductId()).getName() + " is successfully added");
+            return ResponseEntity.ok(result);
         } else {
             result.setSuccess(false);
             result.setMessage("Product Id or User Id is not found");

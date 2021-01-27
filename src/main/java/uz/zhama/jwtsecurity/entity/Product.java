@@ -20,7 +20,6 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer"})
     private Category category;
 
     @OneToMany(
