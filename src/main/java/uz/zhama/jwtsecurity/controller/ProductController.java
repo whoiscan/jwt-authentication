@@ -4,14 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.zhama.jwtsecurity.entity.Product;
-import uz.zhama.jwtsecurity.models.ProductCategoryReq;
 import uz.zhama.jwtsecurity.models.ProductReq;
-import uz.zhama.jwtsecurity.models.ProductResponse;
 import uz.zhama.jwtsecurity.models.Result;
 import uz.zhama.jwtsecurity.repository.ProductRepository;
 import uz.zhama.jwtsecurity.service.ProductService;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -24,9 +21,8 @@ public class ProductController {
     ProductService productService;
 
     @GetMapping("/product/get/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Integer id) {
-        Optional<Product> optional = productRepository.findById(id);
-        return optional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(500).build());
+    public ResponseEntity<Optional<Product>> getProductById(@PathVariable Integer id) {
+        return productService.getProductById(id);
     }
 
 
