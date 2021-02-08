@@ -10,10 +10,16 @@ import uz.zhama.jwtsecurity.service.InvoiceService;
 @RestController
 @RequestMapping("/api/invoice")
 public class InvoiceController {
+
+    private final InvoiceService invoiceService;
+
     @Autowired
-    InvoiceService invoiceService;
+    public InvoiceController(InvoiceService invoiceService) {
+        this.invoiceService = invoiceService;
+    }
+
     @GetMapping("/create")
-    public JsonSend createInvoice(){
+    public JsonSend createInvoice() {
         return invoiceService.createInvoice();
     }
 }

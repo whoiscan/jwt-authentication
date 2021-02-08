@@ -3,9 +3,7 @@ package uz.zhama.jwtsecurity.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import uz.zhama.jwtsecurity.entity.Product;
-import uz.zhama.jwtsecurity.models.ProductCategoryReq;
 import uz.zhama.jwtsecurity.models.ProductReq;
 import uz.zhama.jwtsecurity.models.ProductResponse;
 import uz.zhama.jwtsecurity.models.Result;
@@ -17,8 +15,13 @@ import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
+
+    private final ProductRepository productRepository;
+
     @Autowired
-    ProductRepository productRepository;
+    public ProductServiceImpl(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     @Override
     public ResponseEntity<Result> addProduct(ProductReq product) {

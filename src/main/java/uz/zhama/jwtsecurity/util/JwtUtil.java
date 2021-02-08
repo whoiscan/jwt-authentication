@@ -3,12 +3,10 @@ package uz.zhama.jwtsecurity.util;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import uz.zhama.jwtsecurity.entity.User;
-import uz.zhama.jwtsecurity.repository.UserRepository;
 
 import java.util.Date;
 

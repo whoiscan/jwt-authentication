@@ -1,9 +1,7 @@
 package uz.zhama.jwtsecurity.service;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import uz.zhama.jwtsecurity.entity.Product;
-import uz.zhama.jwtsecurity.models.ProductCategoryReq;
 import uz.zhama.jwtsecurity.models.ProductReq;
 import uz.zhama.jwtsecurity.models.ProductResponse;
 import uz.zhama.jwtsecurity.models.Result;

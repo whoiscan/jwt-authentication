@@ -1,7 +1,6 @@
 package uz.zhama.jwtsecurity.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.List;
@@ -38,7 +37,7 @@ public class Product {
             orphanRemoval = true
     )
     @JsonIgnore
-    private List<Cart_items> cart_items;
+    private List<CartItems> cart_items;
 
     public Integer getId() {
         return id;
@@ -96,11 +95,11 @@ public class Product {
         this.payments = payments;
     }
 
-    public List<Cart_items> getCart_items() {
+    public List<CartItems> getCart_items() {
         return cart_items;
     }
 
-    public void setCart_items(List<Cart_items> cart_items) {
+    public void setCart_items(List<CartItems> cart_items) {
         this.cart_items = cart_items;
     }
 }

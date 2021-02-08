@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.zhama.jwtsecurity.entity.Category;
 import uz.zhama.jwtsecurity.models.CategoryReq;
-import uz.zhama.jwtsecurity.models.ProductCategoryReq;
 import uz.zhama.jwtsecurity.models.ProductResponse;
 import uz.zhama.jwtsecurity.models.Result;
 import uz.zhama.jwtsecurity.repository.CategoryRepository;
@@ -18,10 +17,15 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/category")
 public class CategoryController {
+
+    private final CategoryRepository categoryRepository;
+    private final ProductService productService;
+
     @Autowired
-    CategoryRepository categoryRepository;
-    @Autowired
-    ProductService productService;
+    public CategoryController(CategoryRepository categoryRepository, ProductService productService) {
+        this.categoryRepository = categoryRepository;
+        this.productService = productService;
+    }
 
     //Get all products by category id
     @GetMapping("/{id}/products")

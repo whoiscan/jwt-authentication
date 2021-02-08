@@ -16,14 +16,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class JwtAuthTokenFilter extends OncePerRequestFilter {
+public class TokenFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtil tokenProvider;
 
     @Autowired
     private MyUserDetailsService userDetailsService;
 
-    private static final Logger logger = LoggerFactory.getLogger(JwtAuthTokenFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(TokenFilter.class);
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,

@@ -6,15 +6,21 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import uz.zhama.jwtsecurity.entity.User;
 import uz.zhama.jwtsecurity.repository.UserRepository;
+
 @Service
 public class SecurityUtil {
+
+    private final UserRepository userRepository;
+
     @Autowired
-    UserRepository userRepository;
+    public SecurityUtil(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public User getCurrentUser() {
         User user = null;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        user = (User)authentication.getPrincipal();
+        user = (User) authentication.getPrincipal();
         return user;
     }
 }

@@ -1,15 +1,13 @@
 package uz.zhama.jwtsecurity.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.zhama.jwtsecurity.entity.Cart;
-import uz.zhama.jwtsecurity.entity.Cart_items;
+import uz.zhama.jwtsecurity.entity.CartItems;
 import uz.zhama.jwtsecurity.models.*;
 import uz.zhama.jwtsecurity.repository.CartRepository;
 import uz.zhama.jwtsecurity.repository.Cart_itemsRepository;
 import uz.zhama.jwtsecurity.repository.ProductRepository;
-import uz.zhama.jwtsecurity.repository.UserRepository;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -38,12 +36,12 @@ public class CartServiceImpl implements CartService {
         if (cartRepository.existsCartByUserId(securityUtil.getCurrentUser().getId())) {
             Cart cartId = cartRepository.getCartIdByUserId(securityUtil.getCurrentUser().getId());
             if (cartId != null && cart_itemsRepository.existsByCartIdAndProductId(cartId.getId(), cartReq.getProductId())) {
-                Cart_items cart_items = cart_itemsRepository.getByCartIdAndProductId(cartId.getId(), cartReq.getProductId());
+                CartItems cart_items = cart_itemsRepository.getByCartIdAndProductId(cartId.getId(), cartReq.getProductId());
                 cart_items.setQuantity(cart_items.getQuantity() + cartReq.getQuantity());
                 cart_itemsRepository.save(cart_items);
                 return getResultResponseEntity(cartReq, result, cart_items);
             } else {
-                Cart_items cart_items = new Cart_items();
+                CartItems cart_items = new CartItems();
                 cart_items.setCreatedDate(Date.from(Instant.now()));
                 cart_items.setQuantity(cartReq.getQuantity());
                 Cart cart = cartRepository.getIdByUserId(securityUtil.getCurrentUser().getId());
@@ -62,7 +60,7 @@ public class CartServiceImpl implements CartService {
                 cart.setStatus(true);
                 cart.setCreatedDate(Date.from(Instant.now()));
                 cartRepository.save(cart);
-                Cart_items cart_items = new Cart_items();
+                CartItems cart_items = new CartItems();
                 cart_items.setCreatedDate(Date.from(Instant.now()));
                 cart_items.setQuantity(cartReq.getQuantity());
                 cart_items.setCart(cart);
@@ -76,7 +74,7 @@ public class CartServiceImpl implements CartService {
 
     }
 
-    private ResponseEntity<Result> getResultResponseEntity(CartReq cartReq, Result result, Cart_items cart_items) {
+    private ResponseEntity<Result> getResultResponseEntity(CartReq cartReq, Result result, CartItems cart_items) {
         if (securityUtil.getCurrentUser().toString() != null && cartReq.getProductId() != null) {
 
             if (productRepository.findById(cartReq.getProductId()).isPresent()) {
@@ -100,7 +98,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public JsonSend getProductsOfCart(Integer userId) {
-        List<Cart_items> products = null;
+        List<CartItems> products = null;
         Optional<Cart> cart = cartRepository.findIdByUserId(userId);
         if (cart.isEmpty())
             return JsonSend.error("No user found", "500");
@@ -108,7 +106,7 @@ public class CartServiceImpl implements CartService {
             products = cart_itemsRepository.getAllProductByCartId(cart.get().getId());
             if (products != null && products.size() != 0) {
                 List<OrderResponse> orderResponses = new ArrayList<>();
-                for (Cart_items product : products) {
+                for (CartItems product : products) {
                     OrderResponse orderResponse = new OrderResponse();
                     orderResponse.setId(product.getId());
                     orderResponse.setQuantity(product.getQuantity());
@@ -127,12 +125,12 @@ public class CartServiceImpl implements CartService {
     public ResponseEntity<Result> removeProductFromCart(CartDelReq cartDelReq) {
         Result result = new Result();
         Optional<Cart> cart = cartRepository.findIdByUserId(securityUtil.getCurrentUser().getId());
-        Optional<Cart_items> optional = cart_itemsRepository.findByCartIdAndProductId(cart.get().getId(), cartDelReq.getProductId());
+        Optional<CartItems> optional = cart_itemsRepository.findByCartIdAndProductId(cart.get().getId(), cartDelReq.getProductId());
         if (cart.isPresent() && cart != null) {
             if (optional.isPresent()) {
-                Cart_items product = optional.get();
+                CartItems product = optional.get();
                 cart_itemsRepository.delete(product);
-                Optional<Cart_items> deletedProduct = optional;
+                Optional<CartItems> deletedProduct = optional;
                 if (deletedProduct.isPresent()) {
                     result.setSuccess(true);
                     result.setMessage(product.getProduct().getName() + " successfully deleted");

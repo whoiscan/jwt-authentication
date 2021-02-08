@@ -3,24 +3,26 @@ package uz.zhama.jwtsecurity.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import uz.zhama.jwtsecurity.entity.User;
-import uz.zhama.jwtsecurity.models.*;
+import uz.zhama.jwtsecurity.models.CartDelReq;
+import uz.zhama.jwtsecurity.models.CartReq;
+import uz.zhama.jwtsecurity.models.JsonSend;
+import uz.zhama.jwtsecurity.models.Result;
 import uz.zhama.jwtsecurity.repository.UserRepository;
 import uz.zhama.jwtsecurity.service.CartService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/cart")
 public class CartController {
+
+    private final CartService cartService;
+    private final UserRepository userRepository;
+
     @Autowired
-    CartService cartService;
-    @Autowired
-    UserRepository userRepository;
+    public CartController(CartService cartService, UserRepository userRepository) {
+        this.cartService = cartService;
+        this.userRepository = userRepository;
+    }
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('ROLE_USER')")

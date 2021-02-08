@@ -28,7 +28,7 @@ public class Cart {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<Cart_items> cart_items;
+    private List<CartItems> cart_items;
     @OneToMany(
             fetch = FetchType.LAZY,
             mappedBy = "cart",

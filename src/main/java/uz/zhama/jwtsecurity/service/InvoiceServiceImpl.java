@@ -1,11 +1,10 @@
 package uz.zhama.jwtsecurity.service;
 
 import org.apache.commons.lang3.time.DateUtils;
-import org.assertj.core.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uz.zhama.jwtsecurity.entity.Cart;
-import uz.zhama.jwtsecurity.entity.Cart_items;
+import uz.zhama.jwtsecurity.entity.CartItems;
 import uz.zhama.jwtsecurity.entity.Invoice;
 import uz.zhama.jwtsecurity.models.InvoiceResponse;
 import uz.zhama.jwtsecurity.models.JsonSend;
@@ -13,7 +12,6 @@ import uz.zhama.jwtsecurity.repository.CartRepository;
 import uz.zhama.jwtsecurity.repository.Cart_itemsRepository;
 import uz.zhama.jwtsecurity.repository.InvoiceRepository;
 
-import javax.swing.text.html.Option;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,14 +20,20 @@ import java.util.Optional;
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
+
+    private final CartRepository cartRepository;
+    private final Cart_itemsRepository cart_itemsRepository;
+    private final InvoiceRepository invoiceRepository;
+    private final SecurityUtil securityUtil;
+
     @Autowired
-    CartRepository cartRepository;
-    @Autowired
-    Cart_itemsRepository cart_itemsRepository;
-    @Autowired
-    InvoiceRepository invoiceRepository;
-    @Autowired
-    SecurityUtil securityUtil;
+    public InvoiceServiceImpl(CartRepository cartRepository, Cart_itemsRepository cart_itemsRepository, InvoiceRepository invoiceRepository, SecurityUtil securityUtil) {
+        this.cartRepository = cartRepository;
+        this.cart_itemsRepository = cart_itemsRepository;
+        this.invoiceRepository = invoiceRepository;
+        this.securityUtil = securityUtil;
+    }
+
 
     @Override
     public JsonSend createInvoice() {
@@ -41,11 +45,11 @@ public class InvoiceServiceImpl implements InvoiceService {
             if (invoice1.isPresent()) {
                 if (date.before(invoice1.get().getExpDate())) {
                     InvoiceResponse invoiceResponse = new InvoiceResponse();
-                    System.out.println(date+"\n"+invoice1.get().getExpDate());
-                    List<Cart_items> list = cart_itemsRepository.getAllProductByCartId(cart.get().getId());
+                    System.out.println(date + "\n" + invoice1.get().getExpDate());
+                    List<CartItems> list = cart_itemsRepository.getAllProductByCartId(cart.get().getId());
                     List<String> products = new ArrayList<>();
                     int amount = 0;
-                    for (Cart_items cart_items : list) {
+                    for (CartItems cart_items : list) {
                         amount += cart_items.getQuantity() * cart_items.getProduct().getPrice();
                         products.add(cart_items.getProduct().getName());
                     }
@@ -71,10 +75,10 @@ public class InvoiceServiceImpl implements InvoiceService {
         Date expDate = DateUtils.addHours(date, 2);
         invoice.setExpDate(expDate);
         invoice.setStatus(true);
-        List<Cart_items> list = cart_itemsRepository.getAllProductByCartId(cart.get().getId());
+        List<CartItems> list = cart_itemsRepository.getAllProductByCartId(cart.get().getId());
         List<String> products = new ArrayList<>();
         int amount = 0;
-        for (Cart_items cart_items : list) {
+        for (CartItems cart_items : list) {
             amount += cart_items.getQuantity() * cart_items.getProduct().getPrice();
             products.add(cart_items.getProduct().getName());
         }
@@ -87,7 +91,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             invoiceResponse.setUserName(securityUtil.getCurrentUser().getUsername());
             invoiceResponse.setProducts(products);
             return JsonSend.success("200", invoiceResponse);
-        } else
-            return JsonSend.error("Invoice Not Created!", "500");
+        }
+        return JsonSend.error("Invoice Not Created!", "500");
     }
 }

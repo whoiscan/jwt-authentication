@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import uz.zhama.jwtsecurity.entity.Product;
 import uz.zhama.jwtsecurity.models.ProductReq;
 import uz.zhama.jwtsecurity.models.Result;
-import uz.zhama.jwtsecurity.repository.ProductRepository;
 import uz.zhama.jwtsecurity.service.ProductService;
 
 import java.util.Optional;
@@ -14,11 +13,13 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api")
 public class ProductController {
-    @Autowired
-    ProductRepository productRepository;
+
+    private final ProductService productService;
 
     @Autowired
-    ProductService productService;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @GetMapping("/product/get/{id}")
     public ResponseEntity<Optional<Product>> getProductById(@PathVariable Integer id) {

@@ -13,35 +13,36 @@ import org.springframework.web.bind.annotation.*;
 import uz.zhama.jwtsecurity.entity.Role;
 import uz.zhama.jwtsecurity.entity.RoleName;
 import uz.zhama.jwtsecurity.entity.User;
-import uz.zhama.jwtsecurity.models.LoginForm;
 import uz.zhama.jwtsecurity.models.AuthResponse;
+import uz.zhama.jwtsecurity.models.LoginForm;
 import uz.zhama.jwtsecurity.models.SignUpForm;
 import uz.zhama.jwtsecurity.repository.RoleRepository;
 import uz.zhama.jwtsecurity.repository.UserRepository;
 import uz.zhama.jwtsecurity.util.JwtUtil;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.Collections;
+
 @Slf4j
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-    @Autowired
-    private AuthenticationManager authenticationManager;
+
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtProvider;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder encoder;
 
     @Autowired
-    private JwtUtil jwtProvider;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private PasswordEncoder encoder;
-
+    public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtProvider, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder) {
+        this.authenticationManager = authenticationManager;
+        this.jwtProvider = jwtProvider;
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.encoder = encoder;
+    }
 
     //for getting tokens of registered users
     @PostMapping("/login")

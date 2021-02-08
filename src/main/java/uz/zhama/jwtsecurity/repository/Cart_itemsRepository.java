@@ -2,16 +2,20 @@ package uz.zhama.jwtsecurity.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import uz.zhama.jwtsecurity.entity.Cart_items;
+import uz.zhama.jwtsecurity.entity.CartItems;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface Cart_itemsRepository extends JpaRepository<Cart_items, Integer> {
-    List<Cart_items> getAllProductByCartId(Integer cart_id);
-    Optional<Cart_items> findByCartIdAndProductId(Integer cart_id, Integer product_id);
-    Cart_items getByCartIdAndProductId(Integer cart_id, Integer product_id);
-    Optional<Cart_items> findOneByCartIdAndProductId(Integer cart_id, Integer product_id);
+public interface Cart_itemsRepository extends JpaRepository<CartItems, Integer> {
+    List<CartItems> getAllProductByCartId(Integer cart_id);
+
+    Optional<CartItems> findByCartIdAndProductId(Integer cart_id, Integer product_id);
+
+    CartItems getByCartIdAndProductId(Integer cart_id, Integer product_id);
+
+    Optional<CartItems> findOneByCartIdAndProductId(Integer cart_id, Integer product_id);
+
     Boolean existsByCartIdAndProductId(Integer cartId, Integer productId);
 }
