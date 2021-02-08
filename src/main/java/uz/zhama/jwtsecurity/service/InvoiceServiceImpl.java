@@ -63,8 +63,8 @@ public class InvoiceServiceImpl implements InvoiceService {
                     return getJsonSend(cart, date, getCart);
             } else
                 return getJsonSend(cart, date, getCart);
-        } else
-            return JsonSend.error("Cart Not found!", "500");
+        }
+        return JsonSend.error("Cart Not found!", "500");
     }
 
     private JsonSend getJsonSend(Optional<Cart> cart, Date date, Cart getCart) {

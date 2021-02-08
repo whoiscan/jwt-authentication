@@ -69,18 +69,16 @@ public class ProductServiceImpl implements ProductService {
             Product changedProduct = productRepository.save(baseProduct);
             if (changedProduct != null) {
                 return ResponseEntity.ok(changedProduct);
-            } else {
-                return ResponseEntity.status(500).build();
             }
-        } else {
-            return ResponseEntity.status(400).build();
         }
+        return ResponseEntity.status(400).build();
     }
 
     @Override
     public ResponseEntity<Result> deleteProduct(Integer id) {
         Optional<Product> optional = productRepository.findById(id);
         Result result = new Result();
+        result.setSuccess(false);
         if (optional.isPresent()) {
             Product product = optional.get();
             productRepository.delete(product);
@@ -89,16 +87,12 @@ public class ProductServiceImpl implements ProductService {
                 result.setSuccess(true);
                 result.setMessage(product.getName() + "successfully deleted");
                 return ResponseEntity.ok(result);
-            } else {
-                result.setSuccess(false);
+            } else
                 result.setMessage(product.getName() + "not deleted");
-                return ResponseEntity.status(500).body(result);
-            }
-        } else {
-            result.setSuccess(false);
+        } else
             result.setMessage("Product not found");
-            return ResponseEntity.status(400).body(result);
-        }
+
+        return ResponseEntity.status(400).body(result);
     }
 
     @Override
@@ -115,9 +109,8 @@ public class ProductServiceImpl implements ProductService {
                 productResponses.add(productResponse);
             });
             return ResponseEntity.ok(productResponses);
-        } else {
-            return ResponseEntity.status(500).build();
         }
+        return ResponseEntity.status(500).build();
     }
 
     @Override

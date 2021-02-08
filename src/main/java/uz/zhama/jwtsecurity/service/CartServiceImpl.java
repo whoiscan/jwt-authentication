@@ -115,15 +115,15 @@ public class CartServiceImpl implements CartService {
                     orderResponses.add(orderResponse);
                 }
                 return JsonSend.success("200", orderResponses);
-            } else {
-                return JsonSend.error("No products in cart!", "500");
             }
+            return JsonSend.error("No products in cart!", "500");
         }
     }
 
     @Override
     public ResponseEntity<Result> removeProductFromCart(CartDelReq cartDelReq) {
         Result result = new Result();
+        result.setSuccess(false);
         Optional<Cart> cart = cartRepository.findIdByUserId(securityUtil.getCurrentUser().getId());
         Optional<CartItems> optional = cart_itemsRepository.findByCartIdAndProductId(cart.get().getId(), cartDelReq.getProductId());
         if (cart.isPresent() && cart != null) {
@@ -131,25 +131,16 @@ public class CartServiceImpl implements CartService {
                 CartItems product = optional.get();
                 cart_itemsRepository.delete(product);
                 Optional<CartItems> deletedProduct = optional;
-                if (deletedProduct.isPresent()) {
-                    result.setSuccess(true);
-                    result.setMessage(product.getProduct().getName() + " successfully deleted");
-                    return ResponseEntity.ok(result);
-                } else {
-                    result.setSuccess(false);
-                    result.setMessage(product.getProduct().getName() + " not deleted");
-                    return ResponseEntity.status(500).body(result);
-                }
-            } else {
-                result.setSuccess(false);
+                result.setSuccess(true);
+                result.setMessage(product.getProduct().getName() + " successfully deleted");
+                return ResponseEntity.ok(result);
+            } else
                 result.setMessage("Product not found");
-                return ResponseEntity.status(500).body(result);
-            }
-        } else {
+
+        } else
             result.setMessage("No user found!");
-            result.setSuccess(false);
-            return ResponseEntity.status(500).body(result);
-        }
+        return ResponseEntity.status(500).body(result);
+
     }
 }
 
