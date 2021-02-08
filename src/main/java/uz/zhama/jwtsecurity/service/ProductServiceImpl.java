@@ -26,6 +26,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ResponseEntity<Result> addProduct(ProductReq product) {
         Result result = new Result();
+        result.setSuccess(false);
         Product newProduct = new Product();
         newProduct.setName(product.getName());
         newProduct.setPrice(product.getPrice());
@@ -36,26 +37,15 @@ public class ProductServiceImpl implements ProductService {
         if (optional.isEmpty()) {
             if (product.getCategory() != null) {
                 newProduct.setCategory(product.getCategory());
-                Product savedProduct = productRepository.save(newProduct);
-                if (savedProduct != null) {
-                    result.setMessage(savedProduct.getName() + " saved successfully");
-                    result.setSuccess(true);
-                    return ResponseEntity.ok(result);
-                } else {
-                    result.setMessage(savedProduct.getName() + " not saved. Server Error");
-                    result.setSuccess(false);
-                    return ResponseEntity.status(500).body(result);
-                }
-            } else {
+                productRepository.save(newProduct);
+                result.setSuccess(true);
+                return ResponseEntity.ok(new Result(true, newProduct.getName() + " saved successfully"));
+            } else
                 result.setMessage(product.getName() + " not saved. Incorrect response");
-                result.setSuccess(false);
-                return ResponseEntity.status(400).body(result);
-            }
-        } else {
+        } else
             result.setMessage(product.getName() + " already exists. Product should have a unique name");
-            result.setSuccess(false);
-            return ResponseEntity.status(409).body(result);
-        }
+        return ResponseEntity.status(400).body(result);
+
     }
 
     @Override
@@ -66,10 +56,8 @@ public class ProductServiceImpl implements ProductService {
             baseProduct.setName(productReq.getName());
             baseProduct.setPrice(productReq.getPrice());
             baseProduct.setCategory(productReq.getCategory());
-            Product changedProduct = productRepository.save(baseProduct);
-            if (changedProduct != null) {
-                return ResponseEntity.ok(changedProduct);
-            }
+            productRepository.save(baseProduct);
+            return ResponseEntity.ok(baseProduct);
         }
         return ResponseEntity.status(400).build();
     }
@@ -82,13 +70,7 @@ public class ProductServiceImpl implements ProductService {
         if (optional.isPresent()) {
             Product product = optional.get();
             productRepository.delete(product);
-            Product deletedProduct = productRepository.getOne(id);
-            if (deletedProduct == null) {
-                result.setSuccess(true);
-                result.setMessage(product.getName() + "successfully deleted");
-                return ResponseEntity.ok(result);
-            } else
-                result.setMessage(product.getName() + "not deleted");
+            return ResponseEntity.ok(new Result(true, product.getName() + "successfully deleted"));
         } else
             result.setMessage("Product not found");
 
